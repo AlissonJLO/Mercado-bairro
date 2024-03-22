@@ -59,4 +59,17 @@ def CadastrarProduto() -> dict :
     print("="*30)
     return produto
     
+def EditarProduto() -> int:
+    '''
+    Exibe uma interface para ler o id do produto a ser editado
     
+    Retorno
+    -------
+    Retorna o id do produto a ser editado
+    '''
+    print("="*30)
+    print("Edição de um produto ")
+    print("="*30)
+    id = int(input("Identificação do produto: "))
+    print("="*30)
+    return id
