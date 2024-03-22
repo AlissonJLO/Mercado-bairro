@@ -1,10 +1,10 @@
 import manipulaCSV as mcsv
 
 
-def carregar() ->list: 
+def carregar() -> list:
     '''
     Carrega o arquivo de Cliente.csv numa lista
-    
+
     Retorno
     -------
     Retorna uma lista vazia caso o arquivo não exista ou 
@@ -12,9 +12,9 @@ def carregar() ->list:
     '''
     lista = mcsv.carregarDados("Data/Cliente.csv")
     return lista
-    
 
-def cadastrar( listaClientes : list ) -> bool :
+
+def cadastrar(listaClientes: list) -> bool:
     '''
     Rotina para cadastrar um cliente
 
@@ -26,33 +26,39 @@ def cadastrar( listaClientes : list ) -> bool :
     -------
     Retorna True se o cliente foi cadastrado com sucesso
     '''
-    camposCliente = ["CPF","Nome","Nascimento","Idade","Endereço","Cidade","Estado","Pontos"]
+    camposCliente = ["CPF", "Nome", "Nascimento",
+                     "Idade", "Endereço", "Cidade", "Estado", "Pontos"]
     cliente = {}
     for campo in camposCliente:
         if (campo != 'Pontos'):
             cliente[campo] = input(f"{campo}:")
         else:
-            cliente[campo] =  0            
-        
+            cliente[campo] = 0
+
     listaClientes.append(cliente)
     print(listaClientes)
-    return mcsv.gravarDados('Data/Cliente.csv', camposCliente, listaClientes )
+    return mcsv.gravarDados('Data/Cliente.csv', camposCliente, listaClientes)
 
-def excluir(listaClientes : list, cpf : str ) -> bool:
+
+def excluir(listaClientes: list, cpf: str) -> bool:
     '''
     Excluir um cliente da lista de clientes e atualiza o arquivo CSV
     '''
     flag = False
     camposCliente = list(listaClientes[0].keys())
-    for i,cliente in enumerate(listaClientes):
-        if cliente['CPF'] ==  cpf :
+    for i, cliente in enumerate(listaClientes):
+        if cliente['CPF'] == cpf:
             flag = True
             listaClientes.pop(i)
-    #print(listaClientes)
+    # print(listaClientes)
     if flag:
         mcsv.gravarDados("Data/Cliente.csv", camposCliente, listaClientes)
     return flag
-    
-    
-            
-    
+
+
+def atualizarPontos():
+    return True
+
+
+def atualizarCliente():
+    return True
