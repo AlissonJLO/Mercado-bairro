@@ -44,9 +44,9 @@ def editar() -> bool:
     return False
 
 
-def estoqueSetor() -> bool:
+def estoqueSetor():
     '''
-    Retorna uma lista de produtos de um determinado setor e imprime a quantidade de produtos desse setor.
+    Retorna imprime a quantidade de produtos desse setor.
 
     Parâmetros
     ----------
@@ -59,17 +59,19 @@ def estoqueSetor() -> bool:
     '''
     apresentacao.limpaTela()
     setor = input("Digite um setor para buscar: ")
-    # Assumindo que essa função retorna uma lista de dicionários com produtos
     produtos = carregar()
-    quantidade = 0  # Inicializa a contagem de produtos
+    quantidade = 0
 
     for p in produtos:
         if p["Setor"] == setor:
-            # Assume que 'Quantidade' é um inteiro e soma à contagem
             quantidade += int(p['Quantidade'])
-
-    print(f"Quantidade de produtos no setor {setor}: {quantidade}")
-    return True
+            achou = True
+    if achou:
+        print(f"Quantidade de produtos no setor {setor}: {quantidade}")
+        input("Pressione Enter para continuar...")
+    else:
+        print("Setor não encontrado.")
+        input("Pressione Enter para continuar...")
 
 
 def estoqueBaixo() -> list:
