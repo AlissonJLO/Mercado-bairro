@@ -4,8 +4,6 @@ import apresentacao
 def main():
     while True:
         opcao = apresentacao.MenuPrincipal()
-        print(f'Opção desejada foi {opcao}')
-
         if opcao == 9:
             print("Saindo do programa...")
             break
