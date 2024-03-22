@@ -14,8 +14,9 @@ def carregar() -> list:
     return listaProdutos
 
 
-def cadastrar(listaProdutos: list) -> bool:
+def cadastrar() -> bool:
     apresentacao.limpaTela()
+    listaProdutos = carregar()
     prod = apresentacao.CadastrarProduto()
     listaProdutos.append(prod)
     campos = ["Id", "Setor", "Nome", "Preco", "Validade", "Quantidade"]
@@ -26,12 +27,22 @@ def editar() -> bool:
     apresentacao.limpaTela()
     id = apresentacao.EditarProduto()
     produtos = carregar()
-    for i in range(len(produtos)):
-        if produtos[i]["Id"] == id:
-            produtos[i] = apresentacao.CadastrarProduto()
+    produto_encontrado = False
+    for produto in produtos:
+        if produto["Id"] == id:
+            produto_encontrado = True
+            produto_atualizado = apresentacao.CadastrarProduto()
+            produto.update(produto_atualizado)
             campos = ["Id", "Setor", "Nome", "Preco", "Validade", "Quantidade"]
-            return mcsv.gravarDados("Data/Produtos.csv", campos, produtos)
+            sucesso = mcsv.gravarDados("Data/Produtos.csv", campos, produtos)
+            print("Dados gravados com sucesso." if sucesso else "Falha ao gravar dados.")
+            return sucesso
+
+    if not produto_encontrado:
+        print("Produto com o ID fornecido não encontrado.")
+
     return False
+
 
 def estoqueSetor(setor: str) -> list:
     '''
@@ -49,6 +60,7 @@ def estoqueSetor(setor: str) -> list:
     produtos = carregar()
     return [p for p in produtos if p["Setor"] == setor]
 
+
 def estoqueBaixo() -> list:
     '''
     Retorna uma lista de produtos com estoque baixo
@@ -59,6 +71,7 @@ def estoqueBaixo() -> list:
     '''
     produtos = carregar()
     return [p for p in produtos if p["Quantidade"] < 10]
+
 
 def maisVendido() -> dict:
     '''

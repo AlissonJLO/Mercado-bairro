@@ -40,7 +40,7 @@ def MenuPrincipal() -> str:
 #################################################################
 
 
-def MenuProduto() -> str:
+def MenuProduto():
     while True:
         limpaTela()
         print("#"*20)
@@ -126,7 +126,7 @@ def CadastrarProduto() -> dict:
     return produto
 
 
-def EditarProduto() -> int:
+def EditarProduto() -> str:
     '''
     Exibe uma interface para ler o id do produto a ser editado
 
@@ -137,6 +137,6 @@ def EditarProduto() -> int:
     print("="*30)
     print("Edição de um produto ")
     print("="*30)
-    id = int(input("Identificação do produto: "))
+    id = input("Identificação do produto: ")
     print("="*30)
     return id
