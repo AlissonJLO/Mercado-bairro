@@ -1,4 +1,7 @@
 from os import system, name
+import manipulaClientes as mcli
+import manipulaProduto as mprod
+import manipulaVenda as mvend
 
 #################################################################
 
@@ -38,15 +41,62 @@ def MenuPrincipal() -> str:
 
 
 def MenuProduto() -> str:
-    opcoes = [1, 2, 3, 4, 5, 9]
-    opcao = 10
-    while opcao not in opcoes:
+    while True:
         limpaTela()
         print("#"*20)
         print(
-            "1.Cadastrar novo produto\n2.Atualizar informações do produto\n3.Estoque por setor\n4.Produtos com estoque baixo\n5.Produtos mais vendidos\n9.Sair")
+            "1.Cadastrar novo produto\n2.Atualizar imformaçoes do produto\n3.Estoque por setor\n4.produtos com estoque baixo\n5.produtos mais vendidos\n9.sair")
         print("#"*20)
         opcao = int(input("Opção -> "))
+
+        if opcao == 9:
+            break
+        elif opcao == 1:
+            mprod.cadastrar()
+        elif opcao == 2:
+            mprod.editar()
+        elif opcao == 3:
+            mprod.estoqueSetor()
+        elif opcao == 4:
+            mprod.estoqueBaixo()
+        elif opcao == 5:
+            mprod.maisVendidos()
+
+
+def MenuVenda():
+    while True:
+        limpaTela()
+        print("#"*20)
+        print("1.Nova Venda\n2.Listar Vendas do cliente\n9.Sair")
+        print("#"*20)
+        opcao = int(input("Opção -> "))
+
+        if opcao == 9:
+            break  # Retorna ao menu principal
+        elif opcao == 1:
+            # Chama função para realizar nova venda
+            mvend.novaVenda()
+        elif opcao == 2:
+            # Chama função para listar vendas do cliente
+            mvend.listarVendasCliente()
+
+
+def MenuCliente() -> str:
+    while True:
+        limpaTela()
+        print("#"*20)
+        print(
+            "1.Cadastrar novo cliente\n2.Atualizar pontuação\n3.Atualizar cliente\n9.Sair")
+        print("#"*20)
+        opcao = int(input("Opção -> "))
+        if opcao == 9:
+            break
+        elif opcao == 1:
+            mcli.cadastrar()
+        elif opcao == 2:
+            mcli.atualizarPontos()
+        elif opcao == 3:
+            mcli.atualizarCliente()
 
 
 def CadastrarProduto() -> dict:
