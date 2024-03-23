@@ -45,7 +45,7 @@ def MenuProduto():
         limpaTela()
         print("#"*20)
         print(
-            "1.Cadastrar novo produto\n2.Atualizar imformaçoes do produto\n3.Estoque por setor\n4.produtos com estoque baixo\n5.produtos mais vendidos\n9.sair")
+            "1.Cadastrar novo produto\n2.Atualizar imformaçoes do produto\n3.Busca produtos por setor\n4.Produtos mais comprados dos ultimos 3 dia\n9.sair")
         print("#"*20)
         opcao = int(input("Opção -> "))
 
@@ -56,11 +56,10 @@ def MenuProduto():
         elif opcao == 2:
             mprod.editar()
         elif opcao == 3:
-            mprod.estoqueSetor()
+            mprod.produtoSetor()
         elif opcao == 4:
-            mprod.estoqueBaixo()
-        elif opcao == 5:
             mprod.maisVendidos()
+    
 
 
 def MenuVenda():

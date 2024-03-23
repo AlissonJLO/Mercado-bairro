@@ -1,4 +1,7 @@
 import manipulaCSV as mcsv
+import manipulaVenda as mvend
+import manipulaItensCompra as mitc
+from datetime import datetime, timedelta
 import apresentacao
 
 
@@ -44,59 +47,62 @@ def editar() -> bool:
     return False
 
 
-def estoqueSetor():
-    '''
-    Retorna imprime a quantidade de produtos desse setor.
-
-    Parâmetros
-    ----------
-    setor : str
-        Setor dos produtos a serem listados
-
-    Retorno
-    -------
-    Retorna True se a operação for bem-sucedida.
-    '''
+def produtoSetor():
     apresentacao.limpaTela()
-    setor = input("Digite um setor para buscar: ")
+    setor = input("Informe o setor do produto: ")
     produtos = carregar()
-    quantidade = 0
+    produtos_setor = [
+        produto for produto in produtos if produto["Setor"] == setor]
 
-    for p in produtos:
-        if p["Setor"] == setor:
-            quantidade += int(p['Quantidade'])
-            achou = True
-    if achou:
-        print(f"Quantidade de produtos no setor {setor}: {quantidade}")
-        input("Pressione Enter para continuar...")
+    if len(produtos_setor) > 0:
+        print(f"Produtos do setor {setor}:")
+        for produto in produtos_setor:
+            print(f"ID: {produto['Id']}, Nome: {produto['Nome']}, Preço: R${produto['Preco']}, Validade: {produto['Validade']}, Quantidade em estoque: {produto['Quantidade']}")
     else:
-        print("Setor não encontrado.")
-        input("Pressione Enter para continuar...")
+        print(f"Não há produtos no setor {setor}.")
+
+    input("Pressione ENTER para voltar...")
 
 
-def estoqueBaixo() -> list:
-    '''
-    Retorna uma lista de produtos com estoque baixo
-
-    Retorno
-    -------
-    Retorna uma lista de dicionários com os produtos com estoque baixo
-    '''
+def maisVendidos():
+    vendas = mvend.carregar()
+    itensCompra = mitc.carregar()
     produtos = carregar()
-    return [p for p in produtos if p["Quantidade"] < 10]
+
+    # Obter a data de 3 dias atrás
+    tres_dias_atras = datetime.now() - timedelta(days=3)
+
+    # Filtrar vendas dos últimos 3 dias
+    vendas_recentes = [venda for venda in vendas if datetime.strptime(
+        venda['Data'], "%d/%m/%Y") >= tres_dias_atras]
+
+    # Mapear ID do produto para o nome do produto
+    nome_por_id = {produto['Id']: produto['Nome'] for produto in produtos}
+
+    # Contabilizar a quantidade vendida de cada produto pelo nome
+    quantidade_por_produto = {}
+    for item in itensCompra:
+        if any(venda['Id-Venda'] == item['Id-Venda'] for venda in vendas_recentes):
+            nome_produto = nome_por_id[item['Id-Produto']]
+            if nome_produto in quantidade_por_produto:
+                quantidade_por_produto[nome_produto] += int(item['Quantidade'])
+            else:
+                quantidade_por_produto[nome_produto] = int(item['Quantidade'])
+
+    # Ordenar os produtos pela quantidade vendida
+    mais_vendidos = sorted(quantidade_por_produto.items(),
+                           key=lambda x: x[1], reverse=True)
+
+    # Exibir os cinco produtos mais vendidos
+    print("Os 5 produtos mais vendidos nos últimos 3 dias são:")
+    for nome, quantidade in mais_vendidos[:5]:
+        print(f"Produto: {nome} - Quantidade: {quantidade}")
+    input("Pressione ENTER para voltar...")
+
+    return True
 
 
-def maisVendido() -> dict:
-    '''
-    Retorna o produto mais vendido
-
-    Retorno
-    -------
-    Retorna um dicionário com o produto mais vendido
-    '''
-    produtos = carregar()
-    maisVendido = produtos[0]
-    for p in produtos:
-        if p["Quantidade"] < maisVendido["Quantidade"]:
-            maisVendido = p
-    return maisVendido
+''''
+mitc.carregar() retorna uma lista de dicionários com os itens de compra
+mvend.carregar() retorna uma lista de dicionários com as vendas
+'''
