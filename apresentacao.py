@@ -80,7 +80,7 @@ def MenuVenda():
             mvend.listarVendasCliente()
 
 
-def MenuCliente() -> str:
+def MenuCliente() :
     while True:
         limpaTela()
         print("#"*20)
@@ -91,11 +91,11 @@ def MenuCliente() -> str:
         if opcao == 9:
             break
         elif opcao == 1:
-            mcli.cadastrar()
+            mcli.cadastrarCli()
         elif opcao == 2:
             mcli.atualizarPontos()
         elif opcao == 3:
-            mcli.atualizarCliente()
+            mcli.editarCli()
 
 
 def CadastrarProduto() -> dict:
@@ -123,6 +123,53 @@ def CadastrarProduto() -> dict:
     produto['Quantidade'] = int(input("Quantidade de produto no estoque: "))
     print("="*30)
     return produto
+
+def CadastrarClientes() -> dict:
+    '''
+    Exibe uma interface para ler os dados de um produto
+
+    Retorno
+    -------
+    Retorno um dicionário com os campos e dados de um produto
+    '''
+    clientes = {}
+    print("="*30)
+    print("Cadastro de um novo Cliente ")
+    print("="*30)
+    clientes['cpf'] = input("Digite o cpf do cliente ?: ")
+    print("-"*30)
+    clientes['nome'] = input("Digite o nome ")
+    print("-"*30)
+    clientes['data_nascimento'] = int(input("digite a data de nascimento ddmmyyyy: "))
+    print("-"*30)
+    clientes['idade'] = int(input("digite idade: "))
+    print("-"*30)
+    clientes['endereco'] = input("digite o endereço: ")
+    print("-"*30)
+    clientes['cidade'] = input("digite a cidade: ")
+    print("-"*30)
+    clientes['estado'] = input("digite a uf estado MT: ")
+    print("-"*30)
+    clientes['pontos'] = 0
+    print("="*30)
+    return clientes
+
+
+
+def EditarClientes() -> str:
+    '''
+    Exibe uma interface para ler o id do produto a ser editado
+
+    Retorno
+    -------
+    Retorna o id do produto a ser editado
+    '''
+    print("="*30)
+    print("Atualizar o Cliente ")
+    print("="*30)
+    cpf = input("CPF do cliente: ")
+    print("="*30)
+    return cpf
 
 
 def EditarProduto() -> str:

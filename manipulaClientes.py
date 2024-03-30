@@ -1,4 +1,5 @@
 import manipulaCSV as mcsv
+import apresentacao
 
 
 def carregar() -> list:
@@ -14,30 +15,56 @@ def carregar() -> list:
     return lista
 
 
-def cadastrar(listaClientes: list) -> bool:
+def carregarVendas() -> list:
     '''
-    Rotina para cadastrar um cliente
-
-    Parâmetros
-    ----------
-    listaClientes: Lista atual dos clientes
+    Carrega o arquivo de Cliente.csv numa lista
 
     Retorno
     -------
-    Retorna True se o cliente foi cadastrado com sucesso
+    Retorna uma lista vazia caso o arquivo não exista ou 
+    uma lista de dicionários contendo os dados dos clientes
     '''
-    camposCliente = ["CPF", "Nome", "Nascimento",
-                     "Idade", "Endereço", "Cidade", "Estado", "Pontos"]
-    cliente = {}
-    for campo in camposCliente:
-        if (campo != 'Pontos'):
-            cliente[campo] = input(f"{campo}:")
-        else:
-            cliente[campo] = 0
+    listavenda = mcsv.carregarDados("Data/Vendas.csv")
+    return listavenda
 
+
+
+
+
+
+def cadastrarCli() -> bool:
+    apresentacao.limpaTela()
+    listaClientes = carregar()
+    cliente = apresentacao.CadastrarClientes()
     listaClientes.append(cliente)
-    print(listaClientes)
+    camposCliente = ['nome', 'cpf', 'cidade', 'estado', 'endereco', 'idade', 'data_nascimento', 'pontos']
+
     return mcsv.gravarDados('Data/Cliente.csv', camposCliente, listaClientes)
+
+
+def editarCli() -> bool:
+    apresentacao.limpaTela()
+    cpf = apresentacao.EditarClientes()
+    clientes = carregar()
+    cliente_encontrado = False
+    for cliente in clientes:
+        if cliente["cpf"] == cpf:
+            cliente_encontrado = True
+            cliente_atualizado = apresentacao.CadastrarClientes()
+            cliente.update(cliente_atualizado)
+            camposCliente = ['nome', 'cpf', 'cidade', 'estado', 'endereco', 'idade', 'data_nascimento', 'pontos']
+            sucesso = mcsv.gravarDados('Data/Cliente.csv', camposCliente, clientes)
+
+            print("Dados gravados com sucesso." if sucesso else "Falha ao gravar dados.")
+            return sucesso
+
+    if not cliente_encontrado:
+        print(f"Cliente com o cpf : {cpf} fornecido não encontrado.")
+
+    return False
+
+
+
 
 
 def excluir(listaClientes: list, cpf: str) -> bool:
@@ -62,3 +89,27 @@ def atualizarPontos():
 
 def atualizarCliente():
     return True
+
+
+def atualizarPontos():
+    # Carregar os clientes e as vendas dos arquivos CSV
+    # clientes = mcsv.carregarDados("Data/Cliente.csv")
+    # vendas = mcsv.carregarDados("Data/Vendas.csv")
+
+    clientes = carregar()
+    vendas = carregarVendas()
+
+    pontos_por_cpf = {}
+
+    for venda in vendas:
+        cpf = venda['CPF']
+        total = float(venda['Total'])  
+        pontos_por_cpf[cpf] = pontos_por_cpf.get(cpf, 0) + total
+
+    for cliente in clientes:
+        cpf = cliente['cpf']
+        if cpf in pontos_por_cpf:
+            cliente['pontos'] = pontos_por_cpf[cpf]
+    camposCliente = ['nome', 'cpf', 'cidade', 'estado', 'endereco', 'idade', 'data_nascimento', 'pontos']
+    sucesso = mcsv.gravarDados('Data/Cliente.csv', camposCliente, clientes)
+    return sucesso

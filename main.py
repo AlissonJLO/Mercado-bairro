@@ -13,7 +13,7 @@ def main():
             apresentacao.MenuCliente()
         elif opcao == 3:
             apresentacao.MenuProduto()
-
+        
 
 # Inicio do programa
 if __name__ == "__main__":
