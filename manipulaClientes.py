@@ -1,5 +1,6 @@
 import manipulaCSV as mcsv
 import apresentacao
+import manipulaVenda as mpvs
 
 
 def carregar() -> list:
@@ -15,29 +16,12 @@ def carregar() -> list:
     return lista
 
 
-def carregarVendas() -> list:
-    '''
-    Carrega o arquivo de Cliente.csv numa lista
-
-    Retorno
-    -------
-    Retorna uma lista vazia caso o arquivo não exista ou 
-    uma lista de dicionários contendo os dados dos clientes
-    '''
-    listavenda = mcsv.carregarDados("Data/Vendas.csv")
-    return listavenda
-
-
-
-
-
-
 def cadastrarCli() -> bool:
     apresentacao.limpaTela()
     listaClientes = carregar()
     cliente = apresentacao.CadastrarClientes()
     listaClientes.append(cliente)
-    camposCliente = ['nome', 'cpf', 'cidade', 'estado', 'endereco', 'idade', 'data_nascimento', 'pontos']
+    camposCliente = [ 'cpf','nome', 'data_nascimento','idade','endereco', 'cidade', 'estado', 'pontos']
 
     return mcsv.gravarDados('Data/Cliente.csv', camposCliente, listaClientes)
 
@@ -52,7 +36,7 @@ def editarCli() -> bool:
             cliente_encontrado = True
             cliente_atualizado = apresentacao.CadastrarClientes()
             cliente.update(cliente_atualizado)
-            camposCliente = ['nome', 'cpf', 'cidade', 'estado', 'endereco', 'idade', 'data_nascimento', 'pontos']
+            camposCliente = [ 'cpf','nome', 'data_nascimento','idade','endereco', 'cidade', 'estado', 'pontos']
             sucesso = mcsv.gravarDados('Data/Cliente.csv', camposCliente, clientes)
 
             print("Dados gravados com sucesso." if sucesso else "Falha ao gravar dados.")
@@ -97,7 +81,7 @@ def atualizarPontos():
     # vendas = mcsv.carregarDados("Data/Vendas.csv")
 
     clientes = carregar()
-    vendas = carregarVendas()
+    vendas =  mpvs.carregar()
 
     pontos_por_cpf = {}
 
@@ -110,6 +94,6 @@ def atualizarPontos():
         cpf = cliente['cpf']
         if cpf in pontos_por_cpf:
             cliente['pontos'] = pontos_por_cpf[cpf]
-    camposCliente = ['nome', 'cpf', 'cidade', 'estado', 'endereco', 'idade', 'data_nascimento', 'pontos']
+    camposCliente = [ 'cpf','nome', 'data_nascimento','idade','endereco', 'cidade', 'estado', 'pontos']
     sucesso = mcsv.gravarDados('Data/Cliente.csv', camposCliente, clientes)
     return sucesso

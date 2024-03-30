@@ -1,2 +1,3 @@
-nome;cpf;cidade;estado;endereco;idade;data_nascimento;pontos
+cpf;nome;data_nascimento;idade;endereco;cidade;estado;pontos
+1;1;1;1;1;1;1;200.0
 1;1;1;1;1;1;1;200.0
