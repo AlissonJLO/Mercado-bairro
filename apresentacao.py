@@ -136,22 +136,22 @@ def CadastrarClientes() -> dict:
     print("="*30)
     print("Cadastro de um novo Cliente ")
     print("="*30)
-    clientes['cpf'] = input("Digite o cpf do cliente ?: ")
+    clientes['CPF'] = input("Digite o cpf do cliente ?: ")
     print("-"*30)
-    clientes['nome'] = input("Digite o nome ")
+    clientes['Nome'] = input("Digite o nome ")
     print("-"*30)
-    clientes['data_nascimento'] = int(
+    clientes['Nascimento'] = (
         input("digite a data de nascimento ddmmyyyy: "))
     print("-"*30)
-    clientes['idade'] = int(input("digite idade: "))
+    clientes['Idade'] = int(input("digite idade: "))
     print("-"*30)
-    clientes['endereco'] = input("digite o endereço: ")
+    clientes['Endereco'] = input("digite o endereço: ")
     print("-"*30)
-    clientes['cidade'] = input("digite a cidade: ")
+    clientes['Cidade'] = input("digite a cidade: ")
     print("-"*30)
-    clientes['estado'] = input("digite a uf estado MT: ")
+    clientes['Estado'] = input("digite a uf estado MT: ")
     print("-"*30)
-    clientes['pontos'] = 0
+    clientes['Pontos'] = 0
     print("="*30)
     return clientes
 

@@ -1,5 +1,6 @@
-cpf;nome;data_nascimento;idade;endereco;cidade;estado;pontos
+CPF;Nome;Nascimento;Idade;Endereco;Cidade;Estado;Pontos
 100.243.434-23;Maria do Rosario;12/12/2000;24;Avenida Fernando Correa, 24;Cuiabá;MT;0
 111.222.333-43;João Carlos ; 25/03/1997;26;Rua Tenente Otávio, 343;Várzea Grande;MT;0
-123.456.789-22;Maria;25/01/2000;24;Rua Teste,1;Cuiabá;MT;0
-123.456.789-01;João;25/01/2000;24;Rua Teste,1;Cuiabá;MT;0
+123.456.789-02;Maria;25/01/2000;24;Rua Teste,1;Cuiabá;MT;100.0
+123.456.789-01;João;25/01/2000;24;Rua Teste,1;Cuiabá;MT;100.0
+089.479.981-98;Alisson Corrigido;13/09/2005;19;tijucal;Alta floresta;MT;0

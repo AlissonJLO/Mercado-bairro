@@ -22,7 +22,7 @@ def cadastrarCli() -> bool:
     cliente = apresentacao.CadastrarClientes()
     listaClientes.append(cliente)
     camposCliente = ['CPF', 'Nome', 'Nascimento',
-                     'Idade', 'Endereço', 'Cidade', 'Estado', 'Pontos']
+                     'Idade', 'Endereco', 'Cidade', 'Estado', 'Pontos']
 
     return mcsv.gravarDados('Data/Cliente.csv', camposCliente, listaClientes)
 
@@ -33,12 +33,12 @@ def editarCli() -> bool:
     clientes = carregar()
     cliente_encontrado = False
     for cliente in clientes:
-        if cliente["cpf"] == cpf:
+        if cliente["CPF"] == cpf:
             cliente_encontrado = True
             cliente_atualizado = apresentacao.CadastrarClientes()
             cliente.update(cliente_atualizado)
             camposCliente = ['CPF', 'Nome', 'Nascimento',
-                             'Idade', 'Endereço', 'Cidade', 'Estado', 'Pontos']
+                             'Idade', 'Endereco', 'Cidade', 'Estado', 'Pontos']
             sucesso = mcsv.gravarDados(
                 'Data/Cliente.csv', camposCliente, clientes)
 
@@ -66,6 +66,7 @@ def excluir(listaClientes: list, cpf: str) -> bool:
         mcsv.gravarDados("Data/Cliente.csv", camposCliente, listaClientes)
     return flag
 
+
 def atualizarPontos():
     # Carregar os clientes e as vendas dos arquivos CSV
     # clientes = mcsv.carregarDados("Data/Cliente.csv")
@@ -82,11 +83,11 @@ def atualizarPontos():
         pontos_por_cpf[cpf] = pontos_por_cpf.get(cpf, 0) + total
 
     for cliente in clientes:
-        cpf = cliente['cpf']
+        cpf = cliente['CPF']
         if cpf in pontos_por_cpf:
-            cliente['pontos'] = pontos_por_cpf[cpf]
+            cliente['Pontos'] = pontos_por_cpf[cpf]
     camposCliente = ['CPF', 'Nome', 'Nascimento',
-                     'Idade', 'Endereço', 'Cidade', 'Estado', 'Pontos']
+                     'Idade', 'Endereco', 'Cidade', 'Estado', 'Pontos']
 
     sucesso = mcsv.gravarDados('Data/Cliente.csv', camposCliente, clientes)
     return sucesso
