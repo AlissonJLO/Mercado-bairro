@@ -59,7 +59,6 @@ def MenuProduto():
             mprod.produtoSetor()
         elif opcao == 4:
             mprod.maisVendidos()
-    
 
 
 def MenuVenda():
@@ -80,7 +79,7 @@ def MenuVenda():
             mvend.listarVendasCliente()
 
 
-def MenuCliente() :
+def MenuCliente():
     while True:
         limpaTela()
         print("#"*20)
@@ -124,6 +123,7 @@ def CadastrarProduto() -> dict:
     print("="*30)
     return produto
 
+
 def CadastrarClientes() -> dict:
     '''
     Exibe uma interface para ler os dados de um produto
@@ -140,7 +140,8 @@ def CadastrarClientes() -> dict:
     print("-"*30)
     clientes['nome'] = input("Digite o nome ")
     print("-"*30)
-    clientes['data_nascimento'] = int(input("digite a data de nascimento ddmmyyyy: "))
+    clientes['data_nascimento'] = int(
+        input("digite a data de nascimento ddmmyyyy: "))
     print("-"*30)
     clientes['idade'] = int(input("digite idade: "))
     print("-"*30)
@@ -153,7 +154,6 @@ def CadastrarClientes() -> dict:
     clientes['pontos'] = 0
     print("="*30)
     return clientes
-
 
 
 def EditarClientes() -> str:
