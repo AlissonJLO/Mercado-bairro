@@ -91,3 +91,16 @@ def atualizarPontos():
 
     sucesso = mcsv.gravarDados('Data/Cliente.csv', camposCliente, clientes)
     return sucesso
+
+def checar_cadastro(clientes, cpf) ->str :
+    '''
+    verifica se o CPF está cadastrado
+
+     Retorno
+    -------
+    Retorna true se cadastrado ou false não cadastrado
+    '''
+    for dicionario in clientes:
+        if "CPF" in dicionario and dicionario["CPF"] == cpf:
+            return True
+    return False
