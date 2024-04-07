@@ -2,6 +2,7 @@ from os import system, name
 import manipulaClientes as mcli
 import manipulaProduto as mprod
 import manipulaVenda as mvend
+import time
 
 #################################################################
 
@@ -64,19 +65,32 @@ def MenuProduto():
 def MenuVenda():
     while True:
         limpaTela()
-        print("#"*20)
-        print("1.Nova Venda\n2.Listar Vendas do cliente\n9.Sair")
-        print("#"*20)
-        opcao = int(input("Opção -> "))
-
-        if opcao == 9:
-            break  # Retorna ao menu principal
-        elif opcao == 1:
-            # Chama função para realizar nova venda
-            mvend.novaVenda()
-        elif opcao == 2:
-            # Chama função para listar vendas do cliente
-            mvend.listarVendasCliente()
+        # verifica se o CPF é cadastrado
+        cpf = ler_cpf()
+        clientes = mcli.carregar()
+        cadastro = mcli.checar_cadastro(clientes , cpf)
+        if cadastro:
+            # Cadastro existente, prosseguir menu vendas
+            while True:
+                limpaTela() 
+                print("#"*20)
+                print("1.Nova Venda\n2.Listar Vendas do cliente\n9.Sair")            
+                print("#"*20)
+                opcao = int(input("Opção -> "))
+                if opcao == 9:
+                    break  
+                # Retorna ao menu principal
+                elif opcao == 1:            
+                    # Chama função para realizar nova venda      
+                    mvend.novaVenda()
+                elif opcao == 2: 
+                    # Chama função para listar vendas do cliente
+                    mvend.listarVendasCliente()      
+        else:
+            # CPF não encontrado, redirecionar para cadastro
+            print(f"CPF fornecido não cadastrado.\nRedirecionando para cadastro...\n")
+            time.sleep(3)
+            mcli.cadastrarCli()
 
 
 def MenuCliente():
@@ -186,3 +200,30 @@ def EditarProduto() -> str:
     id = input("Identificação do produto: ")
     print("="*30)
     return id
+
+
+def ler_cpf() -> str:
+    '''
+    Exibe uma interface para inserir o CPF e verificar se foi digitado corretamente
+    Retorno
+    -------
+    Retorna o CPF  
+    '''
+    while True:
+        limpaTela()
+        print("="*30)
+        print("Buscar cadastro de cliente ")
+        print("="*30)
+        cpf = input("CPF do cliente: ")
+        print("="*30)
+        limpaTela()
+        print("="*30)
+        print(f"Confirme o CPF: {cpf}\n")
+        print("="*30)
+        print("1.CPF correto\n2.CPF incorreto\n")
+        opcao = int(input("Opção -> "))
+        if opcao == 1:
+            return cpf
+        if opcao == 2:
+            pass
+        
