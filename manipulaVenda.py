@@ -1,6 +1,6 @@
 import manipulaCSV as mcsv
 import apresentacao
-
+import time
 
 def carregar() -> list:
     '''
@@ -28,6 +28,24 @@ def novaVenda() -> bool:
     vendas.append(venda)
     campos = ["Id", "Cliente", "Data", "Produtos", "Valor"]
     return mcsv.gravarDados("Data/Vendas.csv", campos, vendas)
+
+def vendas_do_cliente():
+    apresentacao.limpaTela()
+    # verifica se o CPF é cadastrado
+    cpf = apresentacao.ler_cpf()
+    clientes = mcli.carregar()            
+    cadastro = mcli.checar_cadastro(clientes, cpf)
+    if cadastro:            
+        #cadastro encontrado
+        vendas = carregar()
+        vendas_cliente = listar_Vendas_Clientes(vendas, cpf)
+        print(vendas_cliente)
+        input("enter para voltar\n")
+    else:
+        # CPF não encontrado, redirecionar para cadastro
+        print("CPF fornecido não cadastrado.\nRedirecionando para cadastro...\n")
+        time.sleep(3)           
+        mcli.cadastrarCli()      
 
 
 def listar_Vendas_Clientes(vendas, cpf) -> list:
