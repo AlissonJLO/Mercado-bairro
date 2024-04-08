@@ -2,7 +2,6 @@ from os import system, name
 import manipulaClientes as mcli
 import manipulaProduto as mprod
 import manipulaVenda as mvend
-import time
 
 #################################################################
 
@@ -64,33 +63,20 @@ def MenuProduto():
 
 def MenuVenda():
     while True:
-        limpaTela()
-        # verifica se o CPF é cadastrado
-        cpf = ler_cpf()
-        clientes = mcli.carregar()
-        cadastro = mcli.checar_cadastro(clientes , cpf)
-        if cadastro:
-            # Cadastro existente, prosseguir menu vendas
-            while True:
-                limpaTela() 
-                print("#"*20)
-                print("1.Nova Venda\n2.Listar Vendas do cliente\n9.Sair")            
-                print("#"*20)
-                opcao = int(input("Opção -> "))
-                if opcao == 9:
-                    break  
-                # Retorna ao menu principal
-                elif opcao == 1:            
-                    # Chama função para realizar nova venda      
-                    mvend.novaVenda()
-                elif opcao == 2: 
-                    # Chama função para listar vendas do cliente
-                    mvend.listarVendasCliente()      
-        else:
-            # CPF não encontrado, redirecionar para cadastro
-            print(f"CPF fornecido não cadastrado.\nRedirecionando para cadastro...\n")
-            time.sleep(3)
-            mcli.cadastrarCli()
+        limpaTela() 
+        print("#"*20)
+        print("1.Nova Venda\n2.Listar Vendas do cliente\n9.Sair")            
+        print("#"*20)
+        opcao = int(input("Opção -> "))
+        if opcao == 9:
+            break  
+         # Retorna ao menu principal
+        elif opcao == 1:            
+            # Chama função para realizar nova venda      
+            mvend.nova_Venda()
+        elif opcao == 2: 
+            # Chama função para listar vendas do cliente
+            mvend.vendas_do_cliente() 
 
 
 def MenuCliente():
