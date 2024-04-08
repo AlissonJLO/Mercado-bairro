@@ -30,7 +30,7 @@ def novaVenda() -> bool:
     return mcsv.gravarDados("Data/Vendas.csv", campos, vendas)
 
 
-def listarVendasCliente() -> list:
+def listar_Vendas_Clientes(vendas, cpf) -> list:
     '''
     Lista as vendas de um determinado cliente
 
@@ -38,6 +38,9 @@ def listarVendasCliente() -> list:
     -------
     Retorna uma lista de dicionários com as vendas do cliente informado
     '''
-    vendas = carregar()
-    cliente = apresentacao.ListarVendasCliente()
-    return [v for v in vendas if v["Cliente"] == cliente]
+    vendas_cliente = []
+    for linha in vendas:
+        if "CPF" in linha and linha["CPF"] == cpf:
+            vendas_cliente.append(dict(linha))
+
+    return vendas_cliente
