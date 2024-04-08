@@ -1,4 +1,5 @@
 import manipulaCSV as mcsv
+import manipulaClientes as mcli
 import apresentacao
 import time
 
