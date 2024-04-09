@@ -24,7 +24,7 @@ def novaVenda() -> bool:
     Retorna True se a venda foi cadastrada com sucesso, False caso contrário
     '''
     apresentacao.limpaTela()
-    venda = apresentacao.Criar_Nova_Venda()
+    venda = apresentacao.efetuar_venda()
     vendas = carregar()
     vendas.append(venda)
     campos = ["Id", "Cliente", "Data", "Produtos", "Valor"]
