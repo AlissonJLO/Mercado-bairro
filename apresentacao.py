@@ -214,7 +214,7 @@ def ler_cpf() -> str:
             pass
 
 
-def Criar_Nova_Venda():
+def efetuar_venda():
     '''
     inicia uma venda uma venda
     '''
