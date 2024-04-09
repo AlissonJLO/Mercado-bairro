@@ -24,7 +24,7 @@ def novaVenda() -> bool:
     Retorna True se a venda foi cadastrada com sucesso, False caso contrário
     '''
     apresentacao.limpaTela()
-    venda = apresentacao.CadastrarVenda()
+    venda = apresentacao.Criar_Nova_Venda()
     vendas = carregar()
     vendas.append(venda)
     campos = ["Id", "Cliente", "Data", "Produtos", "Valor"]
@@ -63,3 +63,18 @@ def listar_Vendas_Clientes(vendas, cpf) -> list:
             vendas_cliente.append(dict(linha))
 
     return vendas_cliente
+
+
+
+def exibir_info_produto(id_produto):
+    '''
+    exibe informações do produto conforme o Id digitado
+    '''
+    produtos = mprod.carregar()
+    for produto in produtos:
+        if produto['Id'] == id_produto:
+            print("Nome do Produto:", produto['Nome'])
+            print("Preço do Produto:", produto['Preco'])
+            print("Quantidade em Estoque:", produto['Quantidade'])
+            return
+    print(f"Produto com ID: {id_produto} não encontrado.")
