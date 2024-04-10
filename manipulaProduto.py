@@ -113,6 +113,45 @@ def maisVendidos():
     return True
 
 
+def exibir_info_produto(id_produto: str, quantidade_desejada: int, lista_compras: list):
+    '''
+    Exibe informações do produto conforme o ID e a quantidade desejada digitados
+    e adiciona o produto à lista de compras se a quantidade em estoque for suficiente
+    '''
+    produtos = carregar()
+    produto_encontrado = False
+    
+    for linha in produtos:
+        if linha['Id'] == id_produto:
+            produto_encontrado = True
+            quantidade_estoque = int(linha['Quantidade'])
+            if quantidade_desejada <= quantidade_estoque:
+                print("Nome do Produto:", linha['Nome'])
+                print("Preço do Produto:", linha['Preco'])
+                print("Quantidade em Estoque antes da compra:", quantidade_estoque)               
+                
+                # Adiciona o produto à lista de compras
+                lista_compras.append({'Nome': linha['Nome'], 'Preco': linha['Preco'], 'Quantidade': quantidade_desejada})
+                print("Produto adicionado à lista de compras.")
+                
+                # Atualiza a quantidade em estoque
+                linha['Quantidade'] -= quantidade_desejada
+                print("Quantidade em Estoque após a compra:", linha['Quantidade'])
+                
+                # Escreve as informações do item no arquivo "ItensCompra"
+                with open("ItensCompra.txt", "a") as arquivo:
+                    id_venda = input("Digite o ID da venda: ")
+                    cpf = input("Digite o CPF: ")
+                    preco_total = quantidade_desejada * float(linha['Preco'])
+                    arquivo.write(f"{id_venda};{cpf};{id_produto};{quantidade_desejada};{linha['Preco']};{preco_total}\n")
+                    print("Informações do item escritas no arquivo 'ItensCompra.txt'")
+            else:
+                print("Não há quantidade suficiente do produto:", linha['Nome'])
+            break  # produto encontrado, interrompe o loop
+           
+    if not produto_encontrado:
+        print("Produto não encontrado.")
+
 ''''
 mitc.carregar() retorna uma lista de dicionários com os itens de compra
 mvend.carregar() retorna uma lista de dicionários com as vendas
