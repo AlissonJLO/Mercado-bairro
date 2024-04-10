@@ -218,26 +218,3 @@ def ler_cpf() -> str:
             return cpf
         if opcao == 2:
             pass
-
-
-def efetuar_venda():
-    '''
-    inicia uma venda uma venda
-    '''
-    print("="*30)
-    print('Informe seu CPF para iniciar a venda')
-    cpf = ler_cpf()
-    clientes = mcli.carregar()
-    if not mcli.checar_cadastro(clientes, cpf):
-        print("CPF não cadastrado, redirecionando para cadastro...")
-        mcli.cadastrarCli()
-    else:
-        Venda = {}
-        while True:
-            id_produto = input(
-                "Digite o ID do produto (ou 'x' para encerrar): ")
-            print("-"*30)
-            mvend.exibir_info_produto(id_produto)
-            quantidade = int(input("Digite a quantidade: "))
-            if id_produto.lower() == 'x':
-                break
