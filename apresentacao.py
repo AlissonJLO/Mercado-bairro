@@ -2,6 +2,7 @@ from os import system, name
 import manipulaClientes as mcli
 import manipulaProduto as mprod
 import manipulaVenda as mvend
+from datetime import datetime
 
 #################################################################
 
@@ -220,6 +221,20 @@ def ler_cpf() -> str:
             pass
 
 
+def exibir_info_produto(id_produto):
+    '''
+    exibe informações do produto conforme o Id digitado
+    '''
+    produtos = mprod.carregar()
+    for produto in produtos:
+        if produto['Id-Produto'] == id_produto:
+            print("Nome do Produto:", produto['Nome'])
+            print("Preço do Produto:", produto['Preco'])
+            print("Quantidade em Estoque:", produto['Quantidade'])
+            return
+    print(f"Produto com ID: {id_produto} não encontrado.")
+
+
 def efetuar_venda():
     '''
     inicia uma venda uma venda
@@ -228,16 +243,25 @@ def efetuar_venda():
     print('Informe seu CPF para iniciar a venda')
     cpf = ler_cpf()
     clientes = mcli.carregar()
+    vendas = mvend.carregar()
+    produtos = mprod.carregar()
     if not mcli.checar_cadastro(clientes, cpf):
         print("CPF não cadastrado, redirecionando para cadastro...")
         mcli.cadastrarCli()
     else:
-        Venda = {}
         while True:
             id_produto = input(
                 "Digite o ID do produto (ou 'x' para encerrar): ")
-            print("-"*30)
-            mvend.exibir_info_produto(id_produto)
-            quantidade = int(input("Digite a quantidade: "))
+            if id_produto in produtos:
+                print("-"*30)
+                exibir_info_produto(id_produto)
+                quantidade = int(input("Digite a quantidade: "))
+                data_atual = datetime.now().strftime('%d/%m/%Y')
+                total = quantidade * mvend.precoProduto(id_produto)
+                idVenda = len(vendas) + 1
+                vendas.append({'Id-Venda': idVenda, 'CPF': cpf, 'Data': data_atual,
+                               'Total': total, 'Quantidade-Produtos': quantidade, })
+            else:
+                print(f"Produto com ID: {id_produto} não encontrado.")
             if id_produto.lower() == 'x':
-                break
+                return vendas

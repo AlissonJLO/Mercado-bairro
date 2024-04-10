@@ -26,10 +26,8 @@ def novaVenda() -> bool:
     Retorna True se a venda foi cadastrada com sucesso, False caso contrário
     '''
     apresentacao.limpaTela()
-    venda = apresentacao.efetuar_venda()
-    vendas = carregar()
-    vendas.append(venda)
-    campos = ['Id-Venda','CPF','Data',"Total",'Quantidade-Produtos']
+    vendas = apresentacao.efetuar_venda()
+    campos = ['Id-Venda', 'CPF', 'Data', "Total", 'Quantidade-Produtos']
     return mcsv.gravarDados("Data/Vendas.csv", campos, vendas)
 
 
@@ -68,15 +66,14 @@ def listar_Vendas_Clientes(vendas, cpf) -> list:
     return vendas_cliente
 
 
-def exibir_info_produto(id_produto):
+def precoProduto(idProduto):
     '''
-    exibe informações do produto conforme o Id digitado
+    Retorno
+    -------
+    Retorna o preço do produto
     '''
     produtos = mprod.carregar()
     for produto in produtos:
-        if produto['Id-Produto'] == id_produto:
-            print("Nome do Produto:", produto['Nome'])
-            print("Preço do Produto:", produto['Preco'])
-            print("Quantidade em Estoque:", produto['Quantidade'])
-            return
-    print(f"Produto com ID: {id_produto} não encontrado.")
+        if produto['Id-Produto'] == idProduto:
+            return produto['Preco']
+    return 0
