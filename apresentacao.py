@@ -225,10 +225,9 @@ def efetuar_venda():
     '''
     inicia uma venda uma venda
     '''
-    while True:
-        id_produto = input("Digite o ID do produto (ou 'x' para encerrar): ")
-        if id_produto.lower() == 'x':
-            break
-        else:
-            mvend.exibir_info_produto(id_produto)
-            print()  # Adiciona uma linha em branco para separar os produtos
+    cpf = ler_cpf()
+    vendas = mvend.carregar()
+    clietes = mcli.carregar()
+    if cpf not in [cliente['CPF'] for cliente in clietes]:
+        print("Cliente não cadastrado")
+     
