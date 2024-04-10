@@ -63,20 +63,20 @@ def MenuProduto():
 
 def MenuVenda():
     while True:
-        limpaTela() 
+        limpaTela()
         print("#"*20)
-        print("1.Nova Venda\n2.Listar Vendas do cliente\n9.Sair")            
+        print("1.Nova Venda\n2.Listar Vendas do cliente\n9.Sair")
         print("#"*20)
         opcao = int(input("Opção -> "))
         if opcao == 9:
-            break  
+            break
          # Retorna ao menu principal
-        elif opcao == 1:            
-            # Chama função para realizar nova venda      
-            mvend.nova_Venda()
-        elif opcao == 2: 
+        elif opcao == 1:
+            # Chama função para realizar nova venda
+            mvend.novaVenda()
+        elif opcao == 2:
             # Chama função para listar vendas do cliente
-            mvend.vendas_do_cliente() 
+            mvend.vendas_do_cliente()
 
 
 def MenuCliente():
@@ -105,6 +105,8 @@ def CadastrarProduto() -> dict:
     -------
     Retorno um dicionário com os campos e dados de um produto
     '''
+    setoresValidos = ["Higiene", "Limpeza",
+                      "Bebidas", "Frios", "Padaria", "Açougue"]
     produto = {}
     print("="*30)
     print("Cadastro de um novo produto ")
@@ -112,6 +114,10 @@ def CadastrarProduto() -> dict:
     produto['Id'] = input("Identificação do produto: ")
     print("-"*30)
     produto['Setor'] = input("Setor do produto: ")
+    while produto['Setor'] not in setoresValidos:
+        print("-"*30)
+        print("Setor inválido. Setores válidos: Higiene, Limpeza, Bebidas, Frios, Padaria, Açougue")
+        produto['Setor'] = input("Setor do produto: ")
     print("-"*30)
     produto['Nome'] = input("Nome do produto: ")
     print("-"*30)
@@ -225,4 +231,3 @@ def efetuar_venda():
         else:
             mvend.exibir_info_produto(id_produto)
             print()  # Adiciona uma linha em branco para separar os produtos
-

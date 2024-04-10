@@ -29,6 +29,7 @@ def cadastrar() -> bool:
 def editar() -> bool:
     apresentacao.limpaTela()
     id = apresentacao.EditarProduto()
+    apresentacao.limpaTela()
     produtos = carregar()
     produto_encontrado = False
     for produto in produtos:
@@ -50,6 +51,11 @@ def editar() -> bool:
 def produtoSetor():
     apresentacao.limpaTela()
     setor = input("Informe o setor do produto: ")
+    setoresValidos = ["Higiene", "Limpeza",
+                      "Bebidas", "Frios", "Padaria", "Açougue"]
+    while setor not in setoresValidos:
+        print("Setor inválido. Setores válidos: Higiene, Limpeza, Bebidas, Frios, Padaria, Açougue")
+        produto['Setor'] = input("Setor do produto: ")
     produtos = carregar()
     produtos_setor = [
         produto for produto in produtos if produto["Setor"] == setor]
@@ -94,9 +100,14 @@ def maisVendidos():
                            key=lambda x: x[1], reverse=True)
 
     # Exibir os cinco produtos mais vendidos
+    apresentacao.limpaTela()
     print("Os 5 produtos mais vendidos nos últimos 3 dias são:")
-    for nome, quantidade in mais_vendidos[:5]:
-        print(f"Produto: {nome} - Quantidade: {quantidade}")
+    if len(mais_vendidos) == 0:
+        apresentacao.limpaTela()
+        print("Nenhum produto vendido nos últimos 3 dias.")
+    else:
+        for nome, quantidade in mais_vendidos[:5]:
+            print(f"Produto: {nome} - Quantidade: {quantidade}")
     input("Pressione ENTER para voltar...")
 
     return True

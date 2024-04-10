@@ -5,6 +5,7 @@ def main():
     while True:
         opcao = apresentacao.MenuPrincipal()
         if opcao == 9:
+            apresentacao.limpaTela()
             print("Saindo do programa...")
             break
         elif opcao == 1:
