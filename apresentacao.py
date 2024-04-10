@@ -111,7 +111,7 @@ def CadastrarProduto() -> dict:
     print("="*30)
     print("Cadastro de um novo produto ")
     print("="*30)
-    produto['Id'] = input("Identificação do produto: ")
+    produto['Id-Produto'] = input("Identificação do produto: ")
     print("-"*30)
     produto['Setor'] = input("Setor do produto: ")
     while produto['Setor'] not in setoresValidos:
@@ -224,10 +224,20 @@ def efetuar_venda():
     '''
     inicia uma venda uma venda
     '''
-    while True:
-        id_produto = input("Digite o ID do produto (ou 'x' para encerrar): ")
-        if id_produto.lower() == 'x':
-            break
-        else:
+    print("="*30)
+    print('Informe seu CPF para iniciar a venda')
+    cpf = ler_cpf()
+    clientes = mcli.carregar()
+    if not mcli.checar_cadastro(clientes, cpf):
+        print("CPF não cadastrado, redirecionando para cadastro...")
+        mcli.cadastrarCli()
+    else:
+        Venda = {}
+        while True:
+            id_produto = input(
+                "Digite o ID do produto (ou 'x' para encerrar): ")
+            print("-"*30)
             mvend.exibir_info_produto(id_produto)
-            print()  # Adiciona uma linha em branco para separar os produtos
+            quantidade = int(input("Digite a quantidade: "))
+            if id_produto.lower() == 'x':
+                break

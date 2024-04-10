@@ -29,7 +29,7 @@ def novaVenda() -> bool:
     venda = apresentacao.efetuar_venda()
     vendas = carregar()
     vendas.append(venda)
-    campos = ["Id", "Cliente", "Data", "Produtos", "Valor"]
+    campos = ['Id-Venda','CPF','Data',"Total",'Quantidade-Produtos']
     return mcsv.gravarDados("Data/Vendas.csv", campos, vendas)
 
 
@@ -74,7 +74,7 @@ def exibir_info_produto(id_produto):
     '''
     produtos = mprod.carregar()
     for produto in produtos:
-        if produto['Id'] == id_produto:
+        if produto['Id-Produto'] == id_produto:
             print("Nome do Produto:", produto['Nome'])
             print("Preço do Produto:", produto['Preco'])
             print("Quantidade em Estoque:", produto['Quantidade'])
