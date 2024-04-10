@@ -22,7 +22,7 @@ def cadastrar() -> bool:
     listaProdutos = carregar()
     prod = apresentacao.CadastrarProduto()
     listaProdutos.append(prod)
-    campos = ["Id-Produto", "Setor", "Nome", "Preco", "Validade", "Quantidade"]
+    campos = ["Id", "Setor", "Nome", "Preco", "Validade", "Quantidade"]
     return mcsv.gravarDados("Data/Produtos.csv", campos, listaProdutos)
 
 
@@ -33,11 +33,11 @@ def editar() -> bool:
     produtos = carregar()
     produto_encontrado = False
     for produto in produtos:
-        if produto["Id-Produto"] == id:
+        if produto["Id"] == id:
             produto_encontrado = True
             produto_atualizado = apresentacao.CadastrarProduto()
             produto.update(produto_atualizado)
-            campos = ["Id-Produto", "Setor", "Nome", "Preco", "Validade", "Quantidade"]
+            campos = ["Id", "Setor", "Nome", "Preco", "Validade", "Quantidade"]
             sucesso = mcsv.gravarDados("Data/Produtos.csv", campos, produtos)
             print("Dados gravados com sucesso." if sucesso else "Falha ao gravar dados.")
             return sucesso
@@ -63,7 +63,7 @@ def produtoSetor():
     if len(produtos_setor) > 0:
         print(f"Produtos do setor {setor}:")
         for produto in produtos_setor:
-            print(f"ID: {produto['Id-Produto']}, Nome: {produto['Nome']}, Preço: R${produto['Preco']}, Validade: {produto['Validade']}, Quantidade em estoque: {produto['Quantidade']}")
+            print(f"ID: {produto['Id']}, Nome: {produto['Nome']}, Preço: R${produto['Preco']}, Validade: {produto['Validade']}, Quantidade em estoque: {produto['Quantidade']}")
     else:
         print(f"Não há produtos no setor {setor}.")
 
@@ -83,7 +83,7 @@ def maisVendidos():
         venda['Data'], "%d/%m/%Y") >= tres_dias_atras]
 
     # Mapear ID do produto para o nome do produto
-    nome_por_id = {produto['Id-Produto']: produto['Nome'] for produto in produtos}
+    nome_por_id = {produto['Id']: produto['Nome'] for produto in produtos}
 
     # Contabilizar a quantidade vendida de cada produto pelo nome
     quantidade_por_produto = {}

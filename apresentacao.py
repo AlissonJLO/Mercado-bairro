@@ -112,7 +112,7 @@ def CadastrarProduto() -> dict:
     print("="*30)
     print("Cadastro de um novo produto ")
     print("="*30)
-    produto['Id-Produto'] = input("Identificação do produto: ")
+    produto['Id'] = input("Identificação do produto: ")
     print("-"*30)
     produto['Setor'] = input("Setor do produto: ")
     while produto['Setor'] not in setoresValidos:
@@ -219,3 +219,16 @@ def ler_cpf() -> str:
             return cpf
         if opcao == 2:
             pass
+
+
+def efetuar_venda():
+    '''
+    inicia uma venda uma venda
+    '''
+    while True:
+        id_produto = input("Digite o ID do produto (ou 'x' para encerrar): ")
+        if id_produto.lower() == 'x':
+            break
+        else:
+            mvend.exibir_info_produto(id_produto)
+            print()  # Adiciona uma linha em branco para separar os produtos

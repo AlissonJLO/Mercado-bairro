@@ -28,37 +28,11 @@ def nova_Venda() -> bool:
     Retorna True se a venda foi cadastrada com sucesso, False caso contrário
     '''
     apresentacao.limpaTela()
-    # verifica se o CPF é cadastrado
-    cpf = apresentacao.ler_cpf()
-    clientes = mcli.carregar()            
-    cadastro = mcli.checar_cadastro(clientes, cpf)
-    if cadastro:
-        apresentacao.limpaTela()
-        # Lista de compras inicialmente vazia
-        lista_compras = []
-
-        # Recebendo entrada do usuário e convertendo para inteiro na mesma linha
-        id_produto = input("Digite o ID do produto (ou 'x' para encerrar): ")
-        if id_produto.lower() == 'x':
-            exit()
-
-        quantidade_desejada = int(input("Digite a quantidade desejada: "))
-        registrar_venda(cpf, lista_compras)
-        atualizar_estoque(id_produto, quantidade_desejada)
-        mprod.exibir_info_produto(id_produto, quantidade_desejada, lista_compras)
-
-        # Exibir lista de compras atualizada
-        print("Lista de Compras:")
-        for item in lista_compras:
-            print(item)
-
-
-    else:
-        # CPF não encontrado, redirecionar para cadastro
-        print("CPF fornecido não cadastrado.\nRedirecionando para cadastro...\n")
-        time.sleep(3)           
-        mcli.cadastrarCli()      
-
+    venda = apresentacao.efetuar_venda()
+    vendas = carregar()
+    vendas.append(venda)
+    campos = ["Id", "Cliente", "Data", "Produtos", "Valor"]
+    return mcsv.gravarDados("Data/Vendas.csv", campos, vendas)
 
 
 def vendas_do_cliente():
@@ -149,15 +123,9 @@ def atualizar_estoque(id_produto: str, quantidade_vendida: int):
         produtos = list(produtos_reader)
         print
     for produto in produtos:
-        if produto['Id-Produto'] == idProduto:
-            return produto['Preco']
-    return 0
         if produto['Id'] == id_produto:
-            produto['Quantidade'] = int(produto['Quantidade']) - quantidade_vendida
-
-    # Escrever os produtos atualizados de volta ao arquivo
-    with open("Data/Produtos.csv", "w", newline='') as produtos_file:
-        fieldnames = ['Id', 'Nome', 'Preco', 'Quantidade']
-        produtos_writer = csv.DictWriter(produtos_file, fieldnames=fieldnames)
-        produtos_writer.writeheader()
-        produtos_writer.writerows(produtos)
+            print("Nome do Produto:", produto['Nome'])
+            print("Preço do Produto:", produto['Preco'])
+            print("Quantidade em Estoque:", produto['Quantidade'])
+            return
+    print(f"Produto com ID: {id_produto} não encontrado.")

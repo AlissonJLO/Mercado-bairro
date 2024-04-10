@@ -1,4 +1,4 @@
-Id-Produto;Setor;Nome;Preco;Validade;Quantidade
+Id;Setor;Nome;Preco;Validade;Quantidade
 12;Bebidas;Monster;10.0;23/05/2005;123
 14;Bebidas;�gua;4.0;12/04/2027;100
 2; Padaria;cacetinho;20.0;23/05/2024;100
