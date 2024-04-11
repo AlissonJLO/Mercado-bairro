@@ -113,7 +113,7 @@ def CadastrarProduto() -> dict:
     print("="*30)
     print("Cadastro de um novo produto ")
     print("="*30)
-    produto['Id'] = input("Identificação do produto: ")
+    produto['Id-Produto'] = input("Identificação do produto: ")
     print("-"*30)
     produto['Setor'] = input("Setor do produto: ")
     while produto['Setor'] not in setoresValidos:
@@ -228,44 +228,10 @@ def efetuar_venda() -> dict:
     ------
     retorna venda{}
     '''
-    limpaTela()
-    # verifica se o CPF é cadastrado
-    cpf = ler_cpf()
-    clientes = mcli.carregar()            
-    cadastro = mcli.checar_cadastro(clientes, cpf)
-    limpaTela()
-    if cadastro:            
-        #cadastro encontrado
-        lista_compras = {}
-        while True: 
-            id_produto = input("Digite o ID do produto ou 'x' para encerrar a lista de compras \n")
-            quantidade_desejada = int(input("Digite a quantidade desejada: "))
-            if id_produto.lower() == "x":
-                break #encerra a lista de compras
-
-            lista_compras = mprod.exibir_info_produto(id_produto, quantidade_desejada, lista_compras, cpf)
-            quantidade_volumes = 0
-            valor_total = 0
-            for item in lista_compras:
-                #quantidade de volumes 
-                quantidade_volumes += 1
-                
-                #calcula o valor total da venda
-                int(item["Preco"])
-                valor_item = item["Preco"] * quantidade_desejada
-                valor_total += valor_item
-
-        #criação do dicionario venda
-        venda = {}
-        venda["Id-Venda"] = mvend.gerar_id_venda()
-        venda["CPF"] = cpf
-        venda["Data"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        venda["Total"] = valor_total
-        venda["Quantidade-Produtos"] = quantidade_volumes
-        return venda
-
-    else:
-        # CPF não encontrado, redirecionar para cadastro
-        print("CPF fornecido não cadastrado.\nRedirecionando para cadastro...\n")
-        time.sleep(3)           
-        mcli.cadastrarCli()      
+    while True:
+        id_produto = input("Digite o ID do produto (ou 'x' para encerrar): ")
+        if id_produto.lower() == 'x':
+            break
+        else:
+            mvend.exibir_info_produto(id_produto)
+            print()  # Adiciona uma linha em branco para separar os produtos
