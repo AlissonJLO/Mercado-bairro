@@ -113,14 +113,15 @@ def maisVendidos():
     return True
 
 
-def exibir_info_produto(id_produto: str, quantidade_desejada: int, lista_compras: list):
+def exibir_info_produto(id_produto: str, quantidade_desejada: int, lista_compras: list, cpf):
     '''
     Exibe informações do produto conforme o ID e a quantidade desejada digitados
     e adiciona o produto à lista de compras se a quantidade em estoque for suficiente
+    -------
+    retorna lista de compras
     '''
     produtos = carregar()
     produto_encontrado = False
-    
     for linha in produtos:
         if linha['Id'] == id_produto:
             produto_encontrado = True
@@ -131,26 +132,39 @@ def exibir_info_produto(id_produto: str, quantidade_desejada: int, lista_compras
                 print("Quantidade em Estoque antes da compra:", quantidade_estoque)               
                 
                 # Adiciona o produto à lista de compras
-                lista_compras.append({'Nome': linha['Nome'], 'Preco': linha['Preco'], 'Quantidade': quantidade_desejada})
+                lista_compras = []
+                item_Nome = linha['Nome']
+                item_Preco = linha['Preco']
+                item_Quantidade = quantidade_desejada 
+                item_lista = [item_Nome, item_Preco, item_Quantidade ]
+                lista_compras.append(item_lista)
                 print("Produto adicionado à lista de compras.")
                 
-                # Atualiza a quantidade em estoque
-                linha['Quantidade'] -= quantidade_desejada
-                print("Quantidade em Estoque após a compra:", linha['Quantidade'])
-                
-                # Escreve as informações do item no arquivo "ItensCompra"
-                with open("ItensCompra.txt", "a") as arquivo:
-                    id_venda = input("Digite o ID da venda: ")
-                    cpf = input("Digite o CPF: ")
-                    preco_total = quantidade_desejada * float(linha['Preco'])
-                    arquivo.write(f"{id_venda};{cpf};{id_produto};{quantidade_desejada};{linha['Preco']};{preco_total}\n")
-                    print("Informações do item escritas no arquivo 'ItensCompra.txt'")
+                # Atualiza a quantidade em estoque no arquivo "Produtos.csv"
+                linha['Quantidade'] = quantidade_estoque - quantidade_desejada
+                campos = ["Id", "Setor", "Nome", "Preco", "Validade", "Quantidade"]
+                mcsv.gravarDados("Data/Produtos.csv", campos, produtos)
+                 
+                #registro itens compra
+                registro_item = []
+                itensCompra = mitc.carregar()
+                id_Venda = mvend.gerar_id_venda()
+                preco_uni = linha['Preco']
+                preco_total = (float(linha['Preco'])) * quantidade_desejada
+                registro_item = [id_Venda, cpf, id_produto, quantidade_desejada, preco_uni, preco_total]
+                #adiciona registro item à ItensCompra.csv
+                itensCompra.append(registro_item)
+                campos = ["Id-Venda", "CPF", "Id-Produto", "Quantidade", "Preço-Unitário", "Preço-Total"]
+                mcsv.gravarDados("Data/ItensCompra.csv", campos, itensCompra)
+                break  # produto encontrado, interrompe o loop
+                                                   
             else:
                 print("Não há quantidade suficiente do produto:", linha['Nome'])
-            break  # produto encontrado, interrompe o loop
-           
-    if not produto_encontrado:
-        print("Produto não encontrado.")
+                break
+        if not produto_encontrado:
+            print("Produto não encontrado.")
+
+    return lista_compras
 
 ''''
 mitc.carregar() retorna uma lista de dicionários com os itens de compra
