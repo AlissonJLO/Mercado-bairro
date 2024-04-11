@@ -112,10 +112,11 @@ def CadastrarProduto() -> dict:
     setoresValidos = ["Higiene", "Limpeza",
                       "Bebidas", "Frios", "Padaria", "Açougue"]
     produto = {}
+    produtos = mprod.carregar()
     print("="*30)
     print("Cadastro de um novo produto ")
     print("="*30)
-    produto['Id-Produto'] = input("Identificação do produto: ")
+    produto['Id-Produto'] = str(len(produtos) + 1)
     print("-"*30)
     produto['Setor'] = input("Setor do produto: ")
     while produto['Setor'] not in setoresValidos:
@@ -127,39 +128,98 @@ def CadastrarProduto() -> dict:
     print("-"*30)
     produto['Preco'] = float(input("Preço do produto: "))
     print("-"*30)
-    produto['Validade'] = input("Data de validade do produto: ")
+    while True:
+        validade = input("Digite a data de validade dd/mm/yyyy: ")
+        if validar_data(validade):
+            produto['Validade'] = validade
+            break
+        else:
+            print("Data inválida, por favor, digite novamente no formato dd/mm/yyyy.")
     print("-"*30)
     produto['Quantidade'] = int(input("Quantidade de produto no estoque: "))
     print("="*30)
     return produto
 
 
-def CadastrarClientes() -> dict:
+def validar_data(data):
     '''
-    Exibe uma interface para ler os dados de um produto
+    Valida se a string de nascimento está no formato dd/mm/aaaa e é uma data válida.
+
+    Parâmetros
+    ----------
+    nascimento : str
+        A string da data de nascimento a ser validada.
 
     Retorno
     -------
-    Retorno um dicionário com os campos e dados de um produto
+    bool
+        Retorna True se a data for válida, False caso contrário.
+    '''
+    try:
+        datetime.strptime(data, "%d/%m/%Y")
+        return True
+    except ValueError:
+        return False
+
+
+def calcular_idade(nascimento):
+    '''
+    Calcula a idade baseado na data de nascimento.
+
+    Parâmetros
+    ----------
+    nascimento : str
+        A data de nascimento no formato dd/mm/yyyy.
+
+    Retorno
+    -------
+    int
+        A idade calculada a partir da data de nascimento.
+    '''
+    data_nascimento = datetime.strptime(nascimento, "%d/%m/%Y")
+    hoje = datetime.now()
+    idade = hoje.year - data_nascimento.year - \
+        ((hoje.month, hoje.day) < (data_nascimento.month, data_nascimento.day))
+    return idade
+
+
+def CadastrarClientes() -> dict:
+    '''
+    Exibe uma interface para ler os dados de um cliente
+
+    Retorno
+    -------
+    Retorna um dicionário com os campos e dados de um cliente.
     '''
     clientes = {}
     print("="*30)
-    print("Cadastro de um novo Cliente ")
+    print("Cadastro de um novo Cliente")
     print("="*30)
-    clientes['CPF'] = input("Digite o cpf do cliente ?: ")
+    # Supõe-se que ler_cpf é uma função definida em outro lugar do código
+    clientes['CPF'] = ler_cpf()
     print("-"*30)
-    clientes['Nome'] = input("Digite o nome ")
+    clientes['Nome'] = input("Digite o nome: ")
     print("-"*30)
-    clientes['Nascimento'] = (
-        input("digite a data de nascimento dd/mm/yyyy: "))
+
+    # Validação da data de nascimento e cálculo da idade
+    while True:
+        nascimento = input("Digite a data de nascimento dd/mm/yyyy: ")
+        # Supõe-se que validar_data é uma função definida em outro lugar do código
+        if validar_data(nascimento):
+            clientes['Nascimento'] = nascimento
+            clientes['Idade'] = calcular_idade(nascimento)
+            break
+        else:
+            print("Data inválida, por favor, digite novamente no formato dd/mm/yyyy.")
+
     print("-"*30)
-    clientes['Idade'] = int(input("digite idade: "))
+    print(f"Idade calculada: {clientes['Idade']} anos")
     print("-"*30)
-    clientes['Endereco'] = input("digite o endereço: ")
+    clientes['Endereco'] = input("Digite o endereço: ")
     print("-"*30)
-    clientes['Cidade'] = input("digite a cidade: ")
+    clientes['Cidade'] = input("Digite a cidade: ")
     print("-"*30)
-    clientes['Estado'] = input("digite a UF: ")
+    clientes['Estado'] = input("Digite a UF: ")
     print("-"*30)
     clientes['Pontos'] = 0
     print("="*30)
@@ -209,7 +269,7 @@ def validar_formato_cpf(cpf: str) -> bool:
 
 def ler_cpf() -> str:
     '''
-    Exibe uma interface para inserir o CPF no formato XXX.XXX.XXX-XX
+    Exibe uma interface para inserir o CPF no formato xxx.xxx.xx-xx
     e verifica se foi digitado corretamente.
 
     Retorno
@@ -219,11 +279,7 @@ def ler_cpf() -> str:
     '''
     while True:
         limpaTela()
-        print("="*30)
-        print("Buscar cadastro de cliente")
-        print("="*30)
         cpf = input("CPF do cliente (XXX.XXX.XXX-XX): ").strip()
-
         # Verifica o formato do CPF
         if not validar_formato_cpf(cpf):
             print(
@@ -245,7 +301,7 @@ def ler_cpf() -> str:
                 print("Opção inválida.")
         except ValueError:
             print("Por favor, digite um número válido.")
-        time.sleep(2)
+        time.sleep(5)
 
 
 def exibirProduto(id_produto: str):
@@ -307,6 +363,8 @@ def efetuar_venda() -> dict:
             produto = exibirProduto(id_produto)
             if not produto:
                 print("Produto não encontrado.")
+            elif int(produto['Quantidade']) == 0:
+                print("Não há quantidade disponível do produto")
             else:
                 quantidade = int(input("Digite a quantidade de itens: "))
                 if quantidade > int(produto['Quantidade']):
