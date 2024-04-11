@@ -17,22 +17,29 @@ def carregar() -> list:
     listaVendas = mcsv.carregarDados("Data/Vendas.csv")
     return listaVendas
 
+# Id-Venda;CPF;Id-Produto;Quantidade;Preço-Unitario;Preco-Total itensCompra.csv
+# Id-Venda;CPF;Data;Total;Quantidade-Produtos Vendas.csv
 
-def novaVenda() -> bool:
-    '''
-    Cadastra uma nova venda
 
-    Retorno
-    -------
-    Retorna True se a venda foi cadastrada com sucesso, False caso contrário
-    '''
+def novaVenda():
     apresentacao.limpaTela()
-    venda = apresentacao.efetuar_venda()
-    vendas = carregar()
-    vendas.append(venda)
-    # salva vednda no arquivo vendas.csv
-    campos = ['Id-Venda', 'CPF', 'Data', 'Total', 'Quantidade-Produtos']
-    return mcsv.gravarDados("Data/Vendas.csv", campos, vendas)
+    itens_venda = apresentacao.efetuar_venda()
+
+    camposVendas = ['Id-Venda', 'CPF', 'Data', 'Total', 'Quantidade-Produtos']
+    camposItens = ['Id-Venda', 'CPF', 'Id-Produto',
+                   'Quantidade', 'Preco-Unitario', 'Preco-Total']
+
+    sucessoVendas = mcsv.gravarDados(
+        "Data/Vendas.csv", camposVendas, itens_venda['vendas'])
+    if not sucessoVendas:
+        print("Falha ao gravar dados de vendas.")
+
+    sucessoItens = mcsv.gravarDados(
+        "Data/ItensCompra.csv", camposItens, itens_venda['itensCompra'])
+    if not sucessoItens:
+        print("Falha ao gravar itens da compra.")
+
+    print("Venda cadastrada com sucesso.")
 
 
 def vendas_do_cliente():
@@ -60,3 +67,16 @@ def listar_vendas(vendas, cpf):
         if venda["CPF"] == cpf:
             vendas_cliente.append(venda)
     return vendas_cliente
+
+
+def BaixaEstoque(idProduto, quantidade):
+    produtos = mprod.carregar()
+    for produto in produtos:
+        if idProduto == produto['Id-Produto']:
+            quantidadeAtual = int(produto['Quantidade'])
+            novaQuantidade = quantidadeAtual - int(quantidade)
+            produto['Quantidade'] = str(novaQuantidade)
+
+    mcsv.gravarDados("Data/Produtos.csv", ['Id-Produto', 'Setor',
+                      'Nome', 'Preco', 'Validade', 'Quantidade'], produtos)
+# Id-Produto;Setor;Nome;Preco;Validade;Quantidade

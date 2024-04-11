@@ -2,7 +2,9 @@ from os import system, name
 import manipulaClientes as mcli
 import manipulaProduto as mprod
 import manipulaVenda as mvend
+import manipulaItensCompra as mitc
 from datetime import datetime
+import re
 import time
 
 #################################################################
@@ -149,7 +151,7 @@ def CadastrarClientes() -> dict:
     clientes['Nome'] = input("Digite o nome ")
     print("-"*30)
     clientes['Nascimento'] = (
-        input("digite a data de nascimento ddmmyyyy: "))
+        input("digite a data de nascimento dd/mm/yyyy: "))
     print("-"*30)
     clientes['Idade'] = int(input("digite idade: "))
     print("-"*30)
@@ -157,7 +159,7 @@ def CadastrarClientes() -> dict:
     print("-"*30)
     clientes['Cidade'] = input("digite a cidade: ")
     print("-"*30)
-    clientes['Estado'] = input("digite a uf estado MT: ")
+    clientes['Estado'] = input("digite a UF: ")
     print("-"*30)
     clientes['Pontos'] = 0
     print("="*30)
@@ -196,42 +198,125 @@ def EditarProduto() -> str:
     return id
 
 
+def validar_formato_cpf(cpf: str) -> bool:
+    """
+    Verifica se o formato do CPF é válido (XXX.XXX.XXX-XX).
+    """
+    # Padrão de regex para validar o formato do CPF
+    pattern = r'^\d{3}\.\d{3}\.\d{3}-\d{2}$'
+    return re.match(pattern, cpf) is not None
+
+
 def ler_cpf() -> str:
     '''
-    Exibe uma interface para inserir o CPF e verificar se foi digitado corretamente
+    Exibe uma interface para inserir o CPF no formato XXX.XXX.XXX-XX
+    e verifica se foi digitado corretamente.
+
     Retorno
     -------
-    Retorna o CPF  
+    Retorna o CPF no formato correto se validado, caso contrário,
+    solicita novamente.
     '''
     while True:
         limpaTela()
         print("="*30)
-        print("Buscar cadastro de cliente ")
+        print("Buscar cadastro de cliente")
         print("="*30)
-        cpf = input("CPF do cliente: ")
-        print("="*30)
-        limpaTela()
+        cpf = input("CPF do cliente (XXX.XXX.XXX-XX): ").strip()
+
+        # Verifica o formato do CPF
+        if not validar_formato_cpf(cpf):
+            print(
+                "Formato de CPF inválido. Por favor, digite novamente no formato XXX.XXX.XXX-XX.")
+            time.sleep(2)
+            continue
+
         print("="*30)
         print(f"Confirme o CPF: {cpf}\n")
         print("="*30)
-        print("1.CPF correto\n2.CPF incorreto\n")
-        opcao = int(input("Opção -> "))
-        if opcao == 1:
-            return cpf
-        if opcao == 2:
-            pass
+        print("1. CPF correto\n2. CPF incorreto\n")
+        try:
+            opcao = int(input("Opção -> "))
+            if opcao == 1:
+                return cpf
+            elif opcao == 2:
+                continue
+            else:
+                print("Opção inválida.")
+        except ValueError:
+            print("Por favor, digite um número válido.")
+        time.sleep(2)
+
+
+def exibirProduto(id_produto: str):
+    '''
+    Exibe as informações de um produto a partir do ID fornecido
+    ------------
+    retorna produto
+
+    '''
+    produtos = mprod.carregar()
+    for produto in produtos:
+        if produto['Id-Produto'] == id_produto:
+            print(f"ID: {produto['Id-Produto']}")
+            print(f"Nome: {produto['Nome']}")
+            print(f"Setor: {produto['Setor']}")
+            print(f"Preço: R$ {produto['Preco']}")
+            print(f"Validade: {produto['Validade']}")
+            print(f"Quantidade em estoque: {produto['Quantidade']}")
+            return produto
+    else:
+        print("Produto não encontrado.")
+        return False
 
 
 def efetuar_venda() -> dict:
     '''
-    inicia uma venda uma venda
+    inicia uma venda
     ------
-    retorna venda{}
+    retorna venda
     '''
+    clientes = mcli.carregar()
+    cpf = ler_cpf()
+    if not mcli.checar_cadastro(clientes, cpf):
+        print("Cliente não cadastrado.")
+        print("Redirecionando para cadastro...")
+        cpf = mcli.cadastrarCli()
+        limpaTela()
+    vendas = mvend.carregar()
+    itensCompra = mitc.carregar()
+    listaItens = []
+    quantidadeProdutos = 0
+    idVenda = len(vendas) + 1
+
     while True:
         id_produto = input("Digite o ID do produto (ou 'x' para encerrar): ")
         if id_produto.lower() == 'x':
-            break
+            itensCompra.extend(listaItens)
+            total = 0
+            for item in listaItens:
+                total += float(item['Preco-Total'])
+            if quantidadeProdutos != 0:
+                vendas.append(
+                    {"Id-Venda": idVenda, "CPF": cpf, "Data": datetime.now().strftime("%d/%m/%Y"), "Total": total, "Quantidade-Produtos": quantidadeProdutos})
+            return {
+                'itensCompra': itensCompra,
+                'vendas': vendas,
+            }
         else:
-            mvend.exibir_info_produto(id_produto)
-            print()  # Adiciona uma linha em branco para separar os produtos
+            produto = exibirProduto(id_produto)
+            if not produto:
+                print("Produto não encontrado.")
+            else:
+                quantidade = int(input("Digite a quantidade de itens: "))
+                if quantidade > int(produto['Quantidade']):
+                    print(
+                        f"Quantidade insuficiente em estoque. Disponível: {produto['Quantidade']}")
+                else:
+                    preco_total = float(produto['Preco']) * quantidade
+                    listaItens.append(
+                        {"Id-Venda": idVenda, 'CPF': cpf, "Id-Produto": produto['Id-Produto'], "Quantidade": quantidade, "Preco-Unitario": produto['Preco'], "Preco-Total": preco_total})
+                    mvend.BaixaEstoque(id_produto, quantidade)
+                    quantidadeProdutos += 1
+# Id-Venda;CPF;Id-Produto;Quantidade;Preço-Unitário;Preço-Total
+# Id-Venda;CPF;Data;Total;Quantidade-Produtos

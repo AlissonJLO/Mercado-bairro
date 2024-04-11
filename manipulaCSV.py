@@ -46,7 +46,6 @@ def gravarDados( nomeArquivo: str, campos : list, lista : list ) -> bool :
         meuCSV.writeheader()        
         for r in lista:            
             meuCSV.writerow(r)
-            print(r)
             arq.flush()
         arq.close()
         return True       

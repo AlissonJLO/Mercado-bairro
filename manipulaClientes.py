@@ -16,7 +16,7 @@ def carregar() -> list:
     return lista
 
 
-def cadastrarCli() -> bool:
+def cadastrarCli() -> str:
     apresentacao.limpaTela()
     listaClientes = carregar()
     cliente = apresentacao.CadastrarClientes()
@@ -24,7 +24,8 @@ def cadastrarCli() -> bool:
     camposCliente = ['CPF', 'Nome', 'Nascimento',
                      'Idade', 'Endereco', 'Cidade', 'Estado', 'Pontos']
 
-    return mcsv.gravarDados('Data/Cliente.csv', camposCliente, listaClientes)
+    mcsv.gravarDados('Data/Cliente.csv', camposCliente, listaClientes)
+    return cliente['CPF']
 
 
 def editarCli() -> bool:
@@ -92,7 +93,8 @@ def atualizarPontos():
     sucesso = mcsv.gravarDados('Data/Cliente.csv', camposCliente, clientes)
     return sucesso
 
-def checar_cadastro(clientes, cpf) ->str :
+
+def checar_cadastro(clientes, cpf) -> str:
     '''
     verifica se o CPF está cadastrado
 

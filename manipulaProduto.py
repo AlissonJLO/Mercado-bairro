@@ -37,7 +37,8 @@ def editar() -> bool:
             produto_encontrado = True
             produto_atualizado = apresentacao.CadastrarProduto()
             produto.update(produto_atualizado)
-            campos = ["Id-Produto", "Setor", "Nome", "Preco", "Validade", "Quantidade"]
+            campos = ["Id-Produto", "Setor", "Nome",
+                      "Preco", "Validade", "Quantidade"]
             sucesso = mcsv.gravarDados("Data/Produtos.csv", campos, produtos)
             print("Dados gravados com sucesso." if sucesso else "Falha ao gravar dados.")
             return sucesso
@@ -83,7 +84,8 @@ def maisVendidos():
         venda['Data'], "%d/%m/%Y") >= tres_dias_atras]
 
     # Mapear ID do produto para o nome do produto
-    nome_por_id = {produto['Id-Produto']: produto['Nome'] for produto in produtos}
+    nome_por_id = {produto['Id-Produto']: produto['Nome']
+                   for produto in produtos}
 
     # Contabilizar a quantidade vendida de cada produto pelo nome
     quantidade_por_produto = {}
@@ -111,11 +113,3 @@ def maisVendidos():
     input("Pressione ENTER para voltar...")
 
     return True
-
-
-
-
-''''
-mitc.carregar() retorna uma lista de dicionários com os itens de compra
-mvend.carregar() retorna uma lista de dicionários com as vendas
-'''

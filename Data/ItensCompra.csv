@@ -1,3 +1,4 @@
-Id-Venda;CPF;Id-Produto;Quantidade;Preço-Unitário;Preço-Total
-13;123.456.789-01;13;1;10;100
-12;123.456.789-02;12;2;20;40
+Id-Venda;CPF;Id-Produto;Quantidade;Preco-Unitario;Preco-Total
+3;123.123.123-12;4;2;6.0;12.0
+4;123.123.123-12;4;20;6.0;120.0
+4;123.123.123-12;12;23;10.0;230.0
