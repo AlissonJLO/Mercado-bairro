@@ -1,10 +1,6 @@
 import manipulaCSV as mcsv
-import manipulaClientes as mcli
 import manipulaProduto as mprod
 import apresentacao
-import time
-from datetime import datetime
-
 
 def carregar() -> list:
     '''
