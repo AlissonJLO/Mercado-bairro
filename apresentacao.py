@@ -3,6 +3,7 @@ import manipulaClientes as mcli
 import manipulaProduto as mprod
 import manipulaVenda as mvend
 from datetime import datetime
+import time
 
 #################################################################
 
@@ -221,13 +222,50 @@ def ler_cpf() -> str:
             pass
 
 
-def efetuar_venda():
+def efetuar_venda() -> dict:
     '''
     inicia uma venda uma venda
+    ------
+    retorna venda{}
     '''
+    limpaTela()
+    # verifica se o CPF é cadastrado
     cpf = ler_cpf()
-    vendas = mvend.carregar()
-    clietes = mcli.carregar()
-    if cpf not in [cliente['CPF'] for cliente in clietes]:
-        print("Cliente não cadastrado")
-     
+    clientes = mcli.carregar()            
+    cadastro = mcli.checar_cadastro(clientes, cpf)
+    limpaTela()
+    if cadastro:            
+        #cadastro encontrado
+        lista_compras = {}
+        while True: 
+            id_produto = input("Digite o ID do produto ou 'x' para encerrar a lista de compras \n")
+            quantidade_desejada = int(input("Digite a quantidade desejada: "))
+            if id_produto.lower() == "x":
+                break #encerra a lista de compras
+
+            lista_compras = mprod.exibir_info_produto(id_produto, quantidade_desejada, lista_compras, cpf)
+            quantidade_volumes = 0
+            valor_total = 0
+            for item in lista_compras:
+                #quantidade de volumes 
+                quantidade_volumes += 1
+                
+                #calcula o valor total da venda
+                int(item["Preco"])
+                valor_item = item["Preco"] * quantidade_desejada
+                valor_total += valor_item
+
+        #criação do dicionario venda
+        venda = {}
+        venda["Id-Venda"] = mvend.gerar_id_venda()
+        venda["CPF"] = cpf
+        venda["Data"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        venda["Total"] = valor_total
+        venda["Quantidade-Produtos"] = quantidade_volumes
+        return venda
+
+    else:
+        # CPF não encontrado, redirecionar para cadastro
+        print("CPF fornecido não cadastrado.\nRedirecionando para cadastro...\n")
+        time.sleep(3)           
+        mcli.cadastrarCli()      
