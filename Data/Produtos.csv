@@ -1,7 +1,8 @@
 Id-Produto;Setor;Nome;Preco;Validade;Quantidade
 1;Bebidas;Monster;10.0;23/05/2005;100
-2;Bebidas;�gua;4.0;12/04/2027;100
-3;Padaria;cacetinho;20.0;23/05/2024;100
+2;Bebidas;Agua;4.0;12/04/2027;100
+3;Padaria;Pao;20.0;23/05/2024;100
 4;Açougue;Carne moida;900.0;25/09/2027;160
 5;Bebidas;Coca-cola;10.0;23/05/2005;123
-6;Higinene;Sabonete;6.0;12/04/2026;0
+6;Higiene;Sabonete;6.0;12/04/2026;0
+7;Padaria;Bolo de chocolate;20.0;14/04/2004;20
