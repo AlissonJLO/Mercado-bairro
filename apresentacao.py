@@ -80,7 +80,7 @@ def MenuVenda():
             mvend.novaVenda()
         elif opcao == 2:
             # Chama função para listar vendas do cliente
-            mvend.vendas_do_cliente()
+            mvend.listarVendas()
 
 
 def MenuCliente():
@@ -376,5 +376,52 @@ def efetuar_venda() -> dict:
                         {"Id-Venda": idVenda, 'CPF': cpf, "Id-Produto": produto['Id-Produto'], "Quantidade": quantidade, "Preco-Unitario": produto['Preco'], "Preco-Total": preco_total})
                     mvend.BaixaEstoque(id_produto, quantidade)
                     quantidadeProdutos += 1
+
+
+def listar_vendas():
+    limpaTela()
+    print("="*30)
+    print('Digite o método de pesquisa\n 1.CPF\n 2.Nome completo\n')
+    opcao = int(input("Opção -> "))
+
+    vendas = mvend.carregar()  # Carregar vendas uma única vez
+
+    if opcao == 1:
+        cpf = ler_cpf()  # Supondo que ler_cpf() é uma função que você já tem
+        for venda in vendas:
+            if venda['CPF'] == cpf:
+                print(f"ID da venda: {venda['Id-Venda']}")
+                print(f"Data da venda: {venda['Data']}")
+                print(f"Total da venda: R$ {venda['Total']}")
+                print(
+                    f"Quantidade de produtos: {venda['Quantidade-Produtos']}")
+                print("="*30)
+        input("Pressione Enter para continuar...")
+    elif opcao == 2:
+        nome = input("Digite o nome completo do cliente: ")
+        clientes = mcli.carregar()  # Supondo que mcli.carregar() carrega todos os clientes
+
+        cpf_encontrado = None
+        for cliente in clientes:
+            if cliente['Nome'] == nome:
+                cpf_encontrado = cliente['CPF']
+                break  # Neste ponto, podemos interromper o loop porque encontramos o CPF do cliente pelo nome
+
+        if cpf_encontrado:
+            for venda in vendas:
+                if venda['CPF'] == cpf_encontrado:
+                    print(f"ID da venda: {venda['Id-Venda']}")
+                    print(f"Data da venda: {venda['Data']}")
+                    print(f"Total da venda: R$ {venda['Total']}")
+                    print(
+                        f"Quantidade de produtos: {venda['Quantidade-Produtos']}")
+                    print("="*30)
+            input("Pressione Enter para continuar...")
+        else:
+            print("Cliente não encontrado.")
+
+    else:
+        print("Opção inválida.")
+
 # Id-Venda;CPF;Id-Produto;Quantidade;Preço-Unitário;Preço-Total
 # Id-Venda;CPF;Data;Total;Quantidade-Produtos

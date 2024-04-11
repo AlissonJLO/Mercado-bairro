@@ -41,34 +41,6 @@ def novaVenda():
 
     print("Venda cadastrada com sucesso.")
 
-
-def vendas_do_cliente():
-    apresentacao.limpaTela()
-    # verifica se o CPF é cadastrado
-    cpf = apresentacao.ler_cpf()
-    clientes = mcli.carregar()
-    cadastro = mcli.checar_cadastro(clientes, cpf)
-    if cadastro:
-        # cadastro encontrado
-        vendas = carregar()
-        vendas_cliente = listar_vendas(vendas, cpf)
-        print(vendas_cliente)
-        input("enter para voltar\n")
-    else:
-        # CPF não encontrado, redirecionar para cadastro
-        print("CPF fornecido não cadastrado.\nRedirecionando para cadastro...\n")
-        time.sleep(3)
-        mcli.cadastrarCli()
-
-
-def listar_vendas(vendas, cpf):
-    vendas_cliente = []
-    for venda in vendas:
-        if venda["CPF"] == cpf:
-            vendas_cliente.append(venda)
-    return vendas_cliente
-
-
 def BaixaEstoque(idProduto, quantidade):
     produtos = mprod.carregar()
     for produto in produtos:
@@ -79,4 +51,8 @@ def BaixaEstoque(idProduto, quantidade):
 
     mcsv.gravarDados("Data/Produtos.csv", ['Id-Produto', 'Setor',
                       'Nome', 'Preco', 'Validade', 'Quantidade'], produtos)
-# Id-Produto;Setor;Nome;Preco;Validade;Quantidade
+
+def listarVendas():
+    apresentacao.limpaTela()
+    apresentacao.listar_vendas()
+    
