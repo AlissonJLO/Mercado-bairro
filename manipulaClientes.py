@@ -1,77 +1,106 @@
 import manipulaCSV as mcsv
-import manipulaClientes as mcli
-import manipulaProduto as mprod
 import apresentacao
-import time
-from datetime import datetime
+import manipulaVenda as mpvs
 
 
 def carregar() -> list:
     '''
-    Carrega a lista de vendas do arquivo vendas.csv
+    Carrega o arquivo de Cliente.csv numa lista
 
     Retorno
     -------
-    Retorna uma lista de dicionários com as vendas lidas
+    Retorna uma lista vazia caso o arquivo não exista ou 
+    uma lista de dicionários contendo os dados dos clientes
     '''
-    listaVendas = mcsv.carregarDados("Data/Vendas.csv")
-    return listaVendas
+    lista = mcsv.carregarDados("Data/Cliente.csv")
+    return lista
 
 
-def novaVenda() -> bool:
-    '''
-    Cadastra uma nova venda
-
-    Retorno
-    -------
-    Retorna True se a venda foi cadastrada com sucesso, False caso contrário
-    '''
+def cadastrarCli() -> bool:
     apresentacao.limpaTela()
-    venda = apresentacao.efetuar_venda()
-    vendas = carregar()
-    vendas.append(venda)
-    #salva vednda no arquivo vendas.csv
-    campos = ['Id-Venda','CPF','Data', 'Total', 'Quantidade-Produtos']
-    return mcsv.gravarDados("Data/Vendas.csv", campos, vendas)
+    listaClientes = carregar()
+    cliente = apresentacao.CadastrarClientes()
+    listaClientes.append(cliente)
+    camposCliente = ['CPF', 'Nome', 'Nascimento',
+                     'Idade', 'Endereco', 'Cidade', 'Estado', 'Pontos']
+
+    return mcsv.gravarDados('Data/Cliente.csv', camposCliente, listaClientes)
 
 
-def gerar_id_venda():
-    '''
-    busca id venda em "Vendas.csv"
-    ------
-    retorna gera um id baseado na ultima venda +1
-    '''
-    vendas = carregar()
-    if not vendas:
-        return 1  # Se não houver vendas, o próximo ID será 1
-    
-    ultimo_dict = vendas[-1]
-    ultimo_id = ultimo_dict.get("Id-Venda", 0)  # Obtém o último ID de venda, se não existir, assume 0
-    return ultimo_id + 1  # Incrementa o último ID de venda em 1
-
-
-def vendas_do_cliente():
+def editarCli() -> bool:
     apresentacao.limpaTela()
-    # verifica se o CPF é cadastrado
-    cpf = apresentacao.ler_cpf()
-    clientes = mcli.carregar()            
-    cadastro = mcli.checar_cadastro(clientes, cpf)
-    if cadastro:            
-        #cadastro encontrado
-        vendas = carregar()
-        vendas_cliente = listar_vendas(vendas,cpf)
-        print(vendas_cliente)
-        input("enter para voltar\n")
-    else:
-        # CPF não encontrado, redirecionar para cadastro
-        print("CPF fornecido não cadastrado.\nRedirecionando para cadastro...\n")
-        time.sleep(3)           
-        mcli.cadastrarCli()      
+    cpf = apresentacao.EditarClientes()
+    clientes = carregar()
+    cliente_encontrado = False
+    for cliente in clientes:
+        if cliente["CPF"] == cpf:
+            cliente_encontrado = True
+            cliente_atualizado = apresentacao.CadastrarClientes()
+            cliente.update(cliente_atualizado)
+            camposCliente = ['CPF', 'Nome', 'Nascimento',
+                             'Idade', 'Endereco', 'Cidade', 'Estado', 'Pontos']
+            sucesso = mcsv.gravarDados(
+                'Data/Cliente.csv', camposCliente, clientes)
+
+            print("Dados gravados com sucesso." if sucesso else "Falha ao gravar dados.")
+            return sucesso
+
+    if not cliente_encontrado:
+        print(f"Cliente com o cpf : {cpf} fornecido não encontrado.")
+
+    return False
 
 
-def listar_vendas(vendas, cpf):
-    vendas_cliente = []
+def excluir(listaClientes: list, cpf: str) -> bool:
+    '''
+    Excluir um cliente da lista de clientes e atualiza o arquivo CSV
+    '''
+    flag = False
+    camposCliente = list(listaClientes[0].keys())
+    for i, cliente in enumerate(listaClientes):
+        if cliente['CPF'] == cpf:
+            flag = True
+            listaClientes.pop(i)
+    # print(listaClientes)
+    if flag:
+        mcsv.gravarDados("Data/Cliente.csv", camposCliente, listaClientes)
+    return flag
+
+
+def atualizarPontos():
+    # Carregar os clientes e as vendas dos arquivos CSV
+    # clientes = mcsv.carregarDados("Data/Cliente.csv")
+    # vendas = mcsv.carregarDados("Data/Vendas.csv")
+
+    clientes = carregar()
+    vendas = mpvs.carregar()
+
+    pontos_por_cpf = {}
+
     for venda in vendas:
-        if venda["CPF"] == cpf:
-            vendas_cliente.append(venda)
-    return vendas_cliente
+        cpf = venda['CPF']
+        total = float(venda['Total'])
+        pontos_por_cpf[cpf] = pontos_por_cpf.get(cpf, 0) + total
+
+    for cliente in clientes:
+        cpf = cliente['CPF']
+        if cpf in pontos_por_cpf:
+            cliente['Pontos'] = pontos_por_cpf[cpf]
+    camposCliente = ['CPF', 'Nome', 'Nascimento',
+                     'Idade', 'Endereco', 'Cidade', 'Estado', 'Pontos']
+
+    sucesso = mcsv.gravarDados('Data/Cliente.csv', camposCliente, clientes)
+    return sucesso
+
+def checar_cadastro(clientes, cpf) ->str :
+    '''
+    verifica se o CPF está cadastrado
+
+     Retorno
+    -------
+    Retorna true se cadastrado ou false não cadastrado
+    '''
+    for dicionario in clientes:
+        if "CPF" in dicionario and dicionario["CPF"] == cpf:
+            return True
+    return False
